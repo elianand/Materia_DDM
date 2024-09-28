@@ -1,0 +1,44 @@
+CARACTERISTICAS A AGREGAR
+
+Deseable
+
+
+1 Implementar el boton para agregar maquinas
+2 En el boton de agregar maquina tenemos que poder seleccionar una imagen de la galeria
+3 Agregar la posibilidad de arrastrar hacia abajo para recargar la lista de maquinas
+4 Agregar la opcion de arrastrar hacia abajo para recargar la pagina en el detalle de maquina
+5 Agregar un generador automatico de datos, que vayana cambiando de la base de datos
+6 Agregar la pantalla de configuracion de usuario, en esta nos debe mostrar nuestros datos
+ 
+
+7 En la pantalla de remote device config: 
+    Se debe poder elegir si desactivar dispositivo con un SwitchListTile
+    Se deeb poder seleccionar los turnos
+    Al final debe tener un boton de aplicar cambios 
+
+
+11 Agregar un fondo de pantalla a las pantallas y que las opciones sean translucidas
+
+
+
+
+
+Detalles
+
+En json_machines_repository se implementan las base de datos
+
+
+Riverpod nos da un provider y nos permite manejar los estados sin usar un setstate.
+Este tambien nos desacopla el manejo de datos con el manejo
+
+
+EN EL PROVIDER DEBEMOS LLAMAR A LAS MAQUINAS, en este debemos hacer el future
+vamos a poner una variable is loading y no utilizamos futureBuilder. Si loading, usamos un
+progress indicator y si no, mostramos las maquinas
+
+
+RUN Floor
+
+flutter packages pub run build_runner build
+
+flutter packages pub run build_runner watch
