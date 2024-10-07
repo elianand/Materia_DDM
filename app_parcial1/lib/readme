@@ -3,13 +3,13 @@ CARACTERISTICAS A AGREGAR
 Deseable
 
 
-1 Implementar el boton para agregar maquinas
+1 Mostrar algo cuando no hay maquinas
 2 En el boton de agregar maquina tenemos que poder seleccionar una imagen de la galeria
-3 Agregar la posibilidad de arrastrar hacia abajo para recargar la lista de maquinas
 4 Agregar la opcion de arrastrar hacia abajo para recargar la pagina en el detalle de maquina
 5 Agregar un generador automatico de datos, que vayana cambiando de la base de datos
-6 Agregar la pantalla de configuracion de usuario, en esta nos debe mostrar nuestros datos
- 
+6 Cambiar los usuarios a una base de datos relacional
+8 Limpiar codigo 
+
 
 7 En la pantalla de remote device config: 
     Se debe poder elegir si desactivar dispositivo con un SwitchListTile

@@ -31,6 +31,12 @@ abstract class MachinesRepository {
   Future<void> insertInjMoldMachine(InjectionMolding machine);
   Future<void> insertCrusherMachine(Crusher machine);
 
+  Future<void> updateInyectMoldMachineById(int id, int temp, int pressure, int produced);
+  Future<void> updateCrusherMachineById(int id, int active);
+
+  Future<void> updateInyectMoldMachine(InjectionMolding machine);
+  Future<void> updateCrusherMachine(Crusher machine);
+
   /*
   final machineList = [
 

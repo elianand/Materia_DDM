@@ -1,9 +1,12 @@
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_parcial1/config/app_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/entities/local_machines_repository.dart';
+import '../../data/entities/local_users_repository.dart';
 import '../../domain/models/machine.dart';
 import '../../domain/models/user.dart';
 
@@ -29,16 +32,85 @@ final userDataProvider = StateNotifierProvider<UserProvider, User>((ref) => User
 class UserProvider extends StateNotifier<User> {
   UserProvider(super.user);
 
+  //final List<User> users = usersList;
+  bool autoLoginOk = false;
+
   void ingresoDeUsuario(User newUser) {
     state = newUser;
   }
 
   int getUserId() {
-    return state.idUser;
+    return state.idUser!;
   }
 
   User getUser() {
     return state;
+  }
+
+  bool isAutoLoginOk() {
+    return autoLoginOk;
+  }
+
+  Future<List<User>?> getUsersList() {
+    return Future.delayed(
+      const Duration(seconds: 1), () async {
+        try {
+
+          final users = await LocalUsersRepository().getUsers();
+          _chequeoAutoLoginUsuario(users);
+
+
+          return users;
+
+        } catch (e) {
+          return null;
+        }
+      },
+    );
+  }
+
+  void _chequeoAutoLoginUsuario(List<User> usersList) async {
+
+    //ref.read(userDataProvider.notifier).ingresoDeUsuario(user);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    
+    bool login = prefs.getBool("login") ?? false;
+    if(login) {
+
+      String? email = prefs.getString('email');
+      String? pass = prefs.getString('pass');
+
+      User? user = usersList.firstWhereOrNull((elem) => elem.email == email);
+
+      if(user?.password == pass){
+
+        //prefs.setBool('login', true);
+        prefs.setString('email', user!.email);
+        prefs.setString('pass', user.password);
+
+        ingresoDeUsuario(user);
+
+        autoLoginOk = true;
+
+      }else {
+        await prefs.setBool('login', false);
+        autoLoginOk = false;
+      }
+    }else {
+      autoLoginOk = false;
+    }
+  }
+
+  
+  Future<void> logout() {
+    return Future.delayed(
+      const Duration(seconds: 2), () async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('login', false);
+        autoLoginOk = false;
+      },
+    );
   }
 }
 
@@ -242,11 +314,19 @@ class MachineProvider extends StateNotifier<MachinesState> {
     }
   }
 
+  Future<void> updateInyectMoldMachineDetail(int temp, int pressure, int produced) async {
+    await LocalMachinesRepository().updateInyectMoldMachineById(state.machineDetailId!, temp, pressure, produced);
+  }
+
+  Future<void> updateCrusherMachineDetail(int active) async {
+    await LocalMachinesRepository().updateCrusherMachineById(state.machineDetailId!, active);
+  }
+
   void cleanMachineDetail() {
     state.machineDetail = null;
   }
 
-  Future<void> insertInjMoldMachine(int idType, String brand, String description, int temp, int pressure) async {
+  Future<void> insertInjMoldMachine(int idType, String brand, String description, int temp, int pressure, String? imagePath) async {
 
     state = state.copyWith(requestState: ProviderState.loading);
 
@@ -265,8 +345,8 @@ class MachineProvider extends StateNotifier<MachinesState> {
     }
 
     int idComp = ref.read(userDataProvider).idComp;
-    Machine newMachine = Machine(id: newId, idType: idType, brand: brand, idComp: idComp, description: description);
-    InjectionMolding newInjMold = InjectionMolding(id: newId, brand: brand, description: description, pressure: pressure, temp: temp);
+    Machine newMachine = Machine(id: newId, idType: idType, brand: brand, idComp: idComp, description: description, posterUrl: imagePath);
+    InjectionMolding newInjMold = InjectionMolding(id: newId, brand: brand, description: description, pressure: pressure, temp: temp, posterUrl: imagePath, produced: 0);
 
     try {
 
@@ -279,7 +359,7 @@ class MachineProvider extends StateNotifier<MachinesState> {
     }
   }
 
-  Future<void> insertCrusherMachine(int idType, String brand, String description, int capacity, int speed) async {
+  Future<void> insertCrusherMachine(int idType, String brand, String description, int capacity, int speed, String? imagePath) async {
 
     state = state.copyWith(requestState: ProviderState.loading);
 
@@ -299,8 +379,8 @@ class MachineProvider extends StateNotifier<MachinesState> {
     
 
     int idComp = ref.read(userDataProvider).idComp;
-    Machine newMachine = Machine(id: newId, idType: idType, brand: brand, idComp: idComp, description: description);
-    Crusher newCrusher = Crusher(id: newId, brand: brand, description: description, capacity: capacity, speed: speed);
+    Machine newMachine = Machine(id: newId, idType: idType, brand: brand, idComp: idComp, description: description, posterUrl: imagePath);
+    Crusher newCrusher = Crusher(id: newId, brand: brand, description: description, capacity: capacity, speed: speed, posterUrl: imagePath);
 
     try {
 
@@ -355,6 +435,13 @@ class MachineProvider extends StateNotifier<MachinesState> {
     }
   }
   
+  int? getMachineDetailId() {
+    return state.machineDetailId;
+  }
+
+  int? getMachineDetailType() {
+    return state.machineDetailType;
+  }
 }
 
 

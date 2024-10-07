@@ -86,4 +86,19 @@ abstract class MachinesDao {
   @insert
   Future<void> insertCrusherMachine(Crusher machine);
 
+
+
+  @Query('UPDATE InjectionMolding SET temp = :temp, pressure = :pressure, produced = :produced WHERE id = :id')
+  Future<void> updateInyectMoldMachineById(int id, int temp, int pressure, int produced);
+
+  @Query('UPDATE Crusher SET active = :active WHERE id = :id')
+  Future<void> updateCrusherMachineById(int id, int active);
+
+  
+
+  @update
+  Future<void> updateInyectMoldMachine(InjectionMolding machine);
+
+  @update
+  Future<void> updateCrusherMachine(Crusher machine);
 }

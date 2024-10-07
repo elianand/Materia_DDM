@@ -52,7 +52,7 @@ class InjectionMolding{
   final String? posterUrl;
   final int temp;
   final int pressure;
-  int produced = 0;
+  final int produced;
   
   InjectionMolding({
     required this.id,
@@ -62,11 +62,9 @@ class InjectionMolding{
 
     required this.temp,
     required this.pressure, 
+    required this.produced,
   });
 
-  setProduce(int produced) {
-    this.produced = produced;
-  }
 
   factory InjectionMolding.fromJson(Map<String, dynamic> json) {
     return InjectionMolding(
@@ -76,6 +74,7 @@ class InjectionMolding{
       temp: json['temp'],
       pressure: json['pressure'],
       posterUrl: json['posterUrl'],
+      produced: 0,
       //idType: json['idType'] as MachinesEnum,
       //idType: MachinesEnum.values.firstWhere((e) => e.toString() == "MachinesEnum.$json['idType']", orElse: () => MachinesEnum.injectionMolding),
       /*idType: switch (json['idType']) {

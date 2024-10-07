@@ -236,6 +236,39 @@ class JsonMachinesRepository implements MachinesRepository {
     );
   }
 
+  @override
+  Future<void> updateInyectMoldMachineById(int id, int temp, int pressure, int produced) {
+    return Future.delayed(
+      const Duration(seconds: 1),
+      () => null,
+    );
+  }
+
+  @override
+  Future<void> updateCrusherMachineById(int id, int active) {
+    return Future.delayed(
+      const Duration(seconds: 1),
+      () => null,
+    );
+  }
+
+  @override
+  Future<void> updateInyectMoldMachine(InjectionMolding machine) {
+    return Future.delayed(
+      const Duration(seconds: 1),
+      () => null,
+    );
+  }
+
+  @override
+  Future<void> updateCrusherMachine(Crusher machine) {
+    return Future.delayed(
+      const Duration(seconds: 1),
+      () => null,
+    );
+  }
+  
+
 
 
 }

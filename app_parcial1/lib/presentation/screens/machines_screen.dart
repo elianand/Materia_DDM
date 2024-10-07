@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_parcial1/domain/models/machine.dart';
 import 'package:app_parcial1/domain/models/user.dart';
 import 'package:app_parcial1/presentation/widgets/drawer_machine_screen.dart';
@@ -84,6 +86,7 @@ class _MachinesScreenState extends ConsumerState<MachinesScreen> {
             MachinesEnum.injectionMolding => const Text("Injection Mold Machines", textAlign: TextAlign.center,),
             MachinesEnum.crusher => const Text("Crusher Machines", textAlign: TextAlign.center,),
           },
+          centerTitle: true,
          //textAlign: TextAlign.center,
         //),
       ),
@@ -217,11 +220,26 @@ class _MachinesScreenState extends ConsumerState<MachinesScreen> {
   }
 }
 
+/*
+File? _imageFile;
 
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path); // Ruta absoluta
+      });
+    }
+  }
+
+*/
 class _MachineDescriptorItem extends ConsumerWidget  {
   const _MachineDescriptorItem({
     required this.machine
   });
+
+  
 
   final MachineDescriptor machine;
 
@@ -238,9 +256,20 @@ class _MachineDescriptorItem extends ConsumerWidget  {
           leading: machine.posterUrl != null 
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(8) ,
-                child: Image.asset(machine.posterUrl!, width: 50,),
+                child: Image.file(
+                  File(machine.posterUrl!), 
+                  width: 50,
+                  errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                    // Retorna una imagen de placeholder o un widget alternativo cuando ocurre un error
+                    return const Icon(
+                      Icons.error, // Mostrar un ícono de error
+                      size: 40,
+                      color: Colors.red,
+                    );
+                  },
+                ),
               )
-            : const Icon(Icons.movie),
+            : const Icon(Icons.precision_manufacturing),
           title: Text("Brand: ${machine.brand}"),
                     
           subtitle: Text("Descripcion: ${machine.description}"),

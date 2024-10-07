@@ -5,19 +5,23 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 
 
 import '../../data/entities/json_machines_repository.dart';
+import '../../data/entities/json_users_repository.dart';
 import '../../data/entities/machines_dao.dart';
+import '../../data/entities/users_dao.dart';
 import '../../domain/models/machine.dart';
+import '../../domain/models/user.dart';
 
 part 'database.g.dart';
 
 @Database(
   version: 3,
-  entities: [Machine, InjectionMolding, Crusher],
+  entities: [User, Machine, InjectionMolding, Crusher],
   //views: [MovieDetailed],
 )
 
 abstract class AppDatabase extends FloorDatabase {
   MachinesDao get machinesDao;
+  UsersDao get usersDao;
 
   static Future<AppDatabase> create(String name) {
 
@@ -33,23 +37,23 @@ abstract class AppDatabase extends FloorDatabase {
 
 
   static Future<void> _prepopulateDb(sqflite.DatabaseExecutor database) async {
-    // Pre-populate the database with movies from the JSON file.
+    // Pre-populate the database with machine and users from the JSON file.
     final repository = JsonMachinesRepository();
     final machines = await repository.getMachines();
     final injMoldMachines = await repository.getInjMoldMachines();
     final crusherMachines = await repository.getCrusherMachines();
 
-    //Aca tengo las tres listas completas
+    final usersRepo = JsonUsersRepository();
+    final users = await usersRepo.getUsers();
+
 
     for (final machine in machines) {
-      // Insert the movie into the database.
       try {
       await InsertionAdapter(
         database,
         'Machine',
         (Machine item) => <String, Object?>{
           'id': item.id,
-          // Para un enum, floor nos pide un entero
           'idType': item.idType,
           'idComp': item.idComp,
           'brand': null,
@@ -63,14 +67,12 @@ abstract class AppDatabase extends FloorDatabase {
     }
 
     for (final machine in injMoldMachines) {
-      // Insert the movie into the database.
       try {
       await InsertionAdapter(
         database,
         'InjectionMolding',
         (InjectionMolding item) => <String, Object?>{
           'id': item.id,
-          // Para un enum, floor nos pide un entero
           'brand': item.brand,
           'description': item.description,
           'posterUrl': item.posterUrl,
@@ -85,14 +87,12 @@ abstract class AppDatabase extends FloorDatabase {
     }
 
     for (final machine in crusherMachines) {
-      // Insert the movie into the database.
       try {
       await InsertionAdapter(
         database,
         'Crusher',
         (Crusher item) => <String, Object?>{
           'id': item.id,
-          // Para un enum, floor nos pide un entero
           'brand': item.brand,
           'description': item.description,
           'posterUrl': item.posterUrl,
@@ -101,6 +101,25 @@ abstract class AppDatabase extends FloorDatabase {
           'active': item.active,
         },
       ).insert(machine, OnConflictStrategy.replace);
+      }catch(e) {
+        print('Error ${e}');
+      }
+    }
+
+
+    for (final user in users) {
+      try {
+      await InsertionAdapter(
+        database,
+        'User',
+        (User item) => <String, Object?>{
+          'idComp': item.idComp,
+          'name': item.name,
+          'email': item.email,
+          'password': item.password,
+          'age': item.age,
+        },
+      ).insert(user, OnConflictStrategy.replace);
       }catch(e) {
         print('Error ${e}');
       }

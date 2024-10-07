@@ -8,11 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'config/database/database.dart';
+import 'data/entities/local_users_repository.dart';
+import 'domain/models/user.dart';
 
 late AppDatabase database;
 
 void main() async {
 
+  late final List<User> usersFuture;
   late final List<Machine> machinesFuture;
   late final List<InjectionMolding> machinesinjMold;
   late final List<Crusher> machinesCrusher;
@@ -23,10 +26,16 @@ void main() async {
 
   // Initialize the database and measure initialization time
   final stopwatch = Stopwatch()..start();
-  database = await AppDatabase.create('app_database8.db');
+  database = await AppDatabase.create('app_database9.db');
   stopwatch.stop();
   log('Database initialized in ${stopwatch.elapsed.inMilliseconds}ms');
   
+  log("Primero los usuarios");
+  usersFuture = await LocalUsersRepository().getUsers();
+  usersFuture.forEach((elem) {
+    log(elem.idUser.toString());
+  }); 
+
   log("Primero las maquinas");
   machinesFuture = await LocalMachinesRepository().getMachines();
   machinesFuture.forEach((elem) {

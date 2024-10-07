@@ -119,6 +119,16 @@ class LocalMachinesRepository implements MachinesRepository {
     return _machinesDao.updateMachine(machine);
   }
 
+  @override
+  Future<void> updateInyectMoldMachine(InjectionMolding machine) async {
+    return _machinesDao.updateInyectMoldMachine(machine);
+  }
+
+  @override
+  Future<void> updateCrusherMachine(Crusher machine) async {
+    return _machinesDao.updateCrusherMachine(machine);
+  }
+
 
   @override
   Future<void> insertInjMoldMachine(InjectionMolding machine) {
@@ -137,6 +147,25 @@ class LocalMachinesRepository implements MachinesRepository {
       },
     );
   }
+
+  @override
+  Future<void> updateInyectMoldMachineById(int id, int temp, int pressure, int produced) async {
+    try{
+      return _machinesDao.updateInyectMoldMachineById(id, temp, pressure, produced);
+
+    }catch(e) {
+      print("Error al actualizar: $e");
+    }
+  }
+
+
+  @override
+  Future<void> updateCrusherMachineById(int id, int active) async {
+    return _machinesDao.updateCrusherMachineById(id, active);
+  }
+
+
+
 
   @override
   Future<void> deleteMachine(int id) {

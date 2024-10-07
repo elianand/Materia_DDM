@@ -60,6 +60,7 @@ class _MachineTypeScreenState extends ConsumerState<MachineTypeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Machine Types", textAlign: TextAlign.center,),
+        centerTitle: true,
       ),
       body: Builder(builder: (context) {
         final machinesProvider = ref.watch(machinesDataProvider);

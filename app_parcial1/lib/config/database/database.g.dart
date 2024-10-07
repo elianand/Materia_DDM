@@ -74,6 +74,8 @@ class _$AppDatabase extends AppDatabase {
 
   MachinesDao? _machinesDaoInstance;
 
+  UsersDao? _usersDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -96,6 +98,8 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
+            'CREATE TABLE IF NOT EXISTS `User` (`idUser` INTEGER PRIMARY KEY AUTOINCREMENT, `idComp` INTEGER NOT NULL, `name` TEXT NOT NULL, `email` TEXT NOT NULL, `password` TEXT NOT NULL, `age` INTEGER)');
+        await database.execute(
             'CREATE TABLE IF NOT EXISTS `Machine` (`id` INTEGER NOT NULL, `idType` INTEGER NOT NULL, `idComp` INTEGER NOT NULL, `brand` TEXT, `description` TEXT, `posterUrl` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `InjectionMolding` (`id` INTEGER NOT NULL, `brand` TEXT NOT NULL, `description` TEXT NOT NULL, `posterUrl` TEXT, `temp` INTEGER NOT NULL, `pressure` INTEGER NOT NULL, `produced` INTEGER NOT NULL, PRIMARY KEY (`id`))');
@@ -111,6 +115,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   MachinesDao get machinesDao {
     return _machinesDaoInstance ??= _$MachinesDao(database, changeListener);
+  }
+
+  @override
+  UsersDao get usersDao {
+    return _usersDaoInstance ??= _$UsersDao(database, changeListener);
   }
 }
 
@@ -165,6 +174,32 @@ class _$MachinesDao extends MachinesDao {
                   'brand': item.brand,
                   'description': item.description,
                   'posterUrl': item.posterUrl
+                }),
+        _injectionMoldingUpdateAdapter = UpdateAdapter(
+            database,
+            'InjectionMolding',
+            ['id'],
+            (InjectionMolding item) => <String, Object?>{
+                  'id': item.id,
+                  'brand': item.brand,
+                  'description': item.description,
+                  'posterUrl': item.posterUrl,
+                  'temp': item.temp,
+                  'pressure': item.pressure,
+                  'produced': item.produced
+                }),
+        _crusherUpdateAdapter = UpdateAdapter(
+            database,
+            'Crusher',
+            ['id'],
+            (Crusher item) => <String, Object?>{
+                  'id': item.id,
+                  'brand': item.brand,
+                  'description': item.description,
+                  'posterUrl': item.posterUrl,
+                  'speed': item.speed,
+                  'capacity': item.capacity,
+                  'active': item.active
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -180,6 +215,10 @@ class _$MachinesDao extends MachinesDao {
   final InsertionAdapter<Crusher> _crusherInsertionAdapter;
 
   final UpdateAdapter<Machine> _machineUpdateAdapter;
+
+  final UpdateAdapter<InjectionMolding> _injectionMoldingUpdateAdapter;
+
+  final UpdateAdapter<Crusher> _crusherUpdateAdapter;
 
   @override
   Future<List<Machine>> findAllMachines() async {
@@ -202,7 +241,8 @@ class _$MachinesDao extends MachinesDao {
             description: row['description'] as String,
             posterUrl: row['posterUrl'] as String?,
             temp: row['temp'] as int,
-            pressure: row['pressure'] as int));
+            pressure: row['pressure'] as int,
+            produced: row['produced'] as int));
   }
 
   @override
@@ -239,7 +279,8 @@ class _$MachinesDao extends MachinesDao {
             description: row['description'] as String,
             posterUrl: row['posterUrl'] as String?,
             temp: row['temp'] as int,
-            pressure: row['pressure'] as int),
+            pressure: row['pressure'] as int,
+            produced: row['produced'] as int),
         arguments: [id]);
   }
 
@@ -291,7 +332,7 @@ class _$MachinesDao extends MachinesDao {
       int idComp) async {
     return _queryAdapter.queryList(
         'SELECT i.* FROM InjectionMolding i INNER JOIN Machine m ON m.id = i.id WHERE m.idType = 1 AND m.idComp = ?1',
-        mapper: (Map<String, Object?> row) => InjectionMolding(id: row['id'] as int, brand: row['brand'] as String, description: row['description'] as String, posterUrl: row['posterUrl'] as String?, temp: row['temp'] as int, pressure: row['pressure'] as int),
+        mapper: (Map<String, Object?> row) => InjectionMolding(id: row['id'] as int, brand: row['brand'] as String, description: row['description'] as String, posterUrl: row['posterUrl'] as String?, temp: row['temp'] as int, pressure: row['pressure'] as int, produced: row['produced'] as int),
         arguments: [idComp]);
   }
 
@@ -329,6 +370,28 @@ class _$MachinesDao extends MachinesDao {
   }
 
   @override
+  Future<void> updateInyectMoldMachineById(
+    int id,
+    int temp,
+    int pressure,
+    int produced,
+  ) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE InjectionMolding SET temp = ?2, pressure = ?3, produced = ?4 WHERE id = ?1',
+        arguments: [id, temp, pressure, produced]);
+  }
+
+  @override
+  Future<void> updateCrusherMachineById(
+    int id,
+    int active,
+  ) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE Crusher SET active = ?2 WHERE id = ?1',
+        arguments: [id, active]);
+  }
+
+  @override
   Future<void> insertMachine(Machine machine) async {
     await _machineInsertionAdapter.insert(machine, OnConflictStrategy.replace);
   }
@@ -347,5 +410,41 @@ class _$MachinesDao extends MachinesDao {
   @override
   Future<void> updateMachine(Machine machine) async {
     await _machineUpdateAdapter.update(machine, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateInyectMoldMachine(InjectionMolding machine) async {
+    await _injectionMoldingUpdateAdapter.update(
+        machine, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateCrusherMachine(Crusher machine) async {
+    await _crusherUpdateAdapter.update(machine, OnConflictStrategy.abort);
+  }
+}
+
+class _$UsersDao extends UsersDao {
+  _$UsersDao(
+    this.database,
+    this.changeListener,
+  ) : _queryAdapter = QueryAdapter(database);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  @override
+  Future<List<User>> findAllUsers() async {
+    return _queryAdapter.queryList('SELECT * FROM User',
+        mapper: (Map<String, Object?> row) => User(
+            idUser: row['idUser'] as int?,
+            idComp: row['idComp'] as int,
+            name: row['name'] as String,
+            email: row['email'] as String,
+            password: row['password'] as String,
+            age: row['age'] as int?));
   }
 }
