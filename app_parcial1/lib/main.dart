@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:app_parcial1/core/router/app_router.dart';
 import 'package:app_parcial1/data/entities/local_machines_repository.dart';
 import 'package:app_parcial1/domain/models/machine.dart';
-import 'package:app_parcial1/theme/providers/general_provider.dart';
+import 'package:app_parcial1/providers/general_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'config/database/database.dart';
 import 'data/entities/local_users_repository.dart';
 import 'domain/models/user.dart';
@@ -24,35 +21,37 @@ void main() async {
   // Ensure that the binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize the database and measure initialization time
+  // Calculamos el tiempo que tarda la base de datos en iniciarse
   final stopwatch = Stopwatch()..start();
-  database = await AppDatabase.create('app_database9.db');
+  database = await AppDatabase.create('app_database10.db');
   stopwatch.stop();
-  log('Database initialized in ${stopwatch.elapsed.inMilliseconds}ms');
+  //             -------------
+
+  debugPrint('Database initialized in ${stopwatch.elapsed.inMilliseconds}ms');
   
-  log("Primero los usuarios");
+  debugPrint("Primero los usuarios");
   usersFuture = await LocalUsersRepository().getUsers();
-  usersFuture.forEach((elem) {
-    log(elem.idUser.toString());
-  }); 
+  for(var elem in usersFuture) {
+    debugPrint(elem.idUser.toString());
+  }
 
-  log("Primero las maquinas");
+  debugPrint("Primero las maquinas");
   machinesFuture = await LocalMachinesRepository().getMachines();
-  machinesFuture.forEach((elem) {
-    log(elem.id.toString());
-  }); 
+  for(var elem in machinesFuture) {
+    debugPrint(elem.id.toString());
+  }
 
-  log("Segundo la INjection Molding");
+  debugPrint("Segundo la INjection Molding");
   machinesinjMold = await LocalMachinesRepository().getInjMoldMachines();
-  machinesinjMold.forEach((elem) {
-    log(elem.id.toString());
-  }); 
+  for(var elem in machinesinjMold) {
+    debugPrint(elem.id.toString());
+  }
 
-  log("Tercero las crusher machines");
+  debugPrint("Tercero las crusher machines");
   machinesCrusher = await LocalMachinesRepository().getCrusherMachines();
-  machinesCrusher.forEach((elem) {
-    log(elem.id.toString());
-  }); 
+  for(var elem in machinesCrusher) {
+    debugPrint(elem.id.toString());
+  }
   
 
 
@@ -71,9 +70,8 @@ class MainApp extends ConsumerWidget {
     final appTheme = ref.watch(themeNotifierProvider);
     
     return MaterialApp.router(
-      //Para sacar la banderita??
+      // Sacamos la bandera de debug
       debugShowCheckedModeBanner: false,
-      //Pub dev es una pagina para buscar librerias  
       routerConfig: appRouter,
       theme: appTheme.getTheme(),
     );

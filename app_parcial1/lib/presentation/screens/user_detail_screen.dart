@@ -2,20 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/models/user.dart';
-import '../../theme/providers/general_provider.dart';
+import '../../providers/general_provider.dart';
 
 class UserDetailsScreen extends ConsumerStatefulWidget {
-    
-  const UserDetailsScreen({Key? key});
-
-  //const MachinesScreen({Key? key, this.user}) : super(key: key);
-
+  const UserDetailsScreen({super.key});
 
   @override
-  _UserDetailsScreenState createState() => _UserDetailsScreenState();
+  UserDetailsScreenState createState() => UserDetailsScreenState();
 }
 
-class _UserDetailsScreenState extends ConsumerState<UserDetailsScreen> {
+class UserDetailsScreenState extends ConsumerState<UserDetailsScreen> {
   
   late final User user;
 
@@ -23,12 +19,9 @@ class _UserDetailsScreenState extends ConsumerState<UserDetailsScreen> {
   void initState() {
     super.initState();
     
-    //machinesFuture = JsonMachinesRepository().getMachines();  // Base de datos no relacional
-    
     user = ref.read(userDataProvider);
   }
 
-  //const _UserDetailsScreenState({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +31,7 @@ class _UserDetailsScreenState extends ConsumerState<UserDetailsScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Regresar a la pantalla anterior
+            Navigator.pop(context);
           },
         ),
       ),
@@ -48,26 +41,31 @@ class _UserDetailsScreenState extends ConsumerState<UserDetailsScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
             const SizedBox(height: 40),
+
             // Avatar con la inicial del nombre
             CircleAvatar(
               radius: 60,
               backgroundColor: Colors.blueAccent,
               child: Text(
-                user.name[0], // Letra inicial del nombre
+                user.name[0],
                 style: const TextStyle(
                   fontSize: 80,
                   color: Colors.white,
                 ),
               ),
             ),
-            const SizedBox(height: 40), // Espacio entre avatar y la info
+
+            // Espacio entre avatar y la info
+            const SizedBox(height: 40), 
+
             // Información del usuario centrada horizontalmente
             _buildUserInfo('ID User:', user.idUser.toString()),
             _buildUserInfo('ID Company:', user.idComp.toString()),
             _buildUserInfo('Name:', user.name),
             _buildUserInfo('Email:', user.email),
-            _buildUserInfo('Password:', user.password), // Mostrar password no recomendado
+            _buildUserInfo('Password:', user.password),
             _buildUserInfo('Age:', user.age?.toString() ?? 'N/A'),
           ],
         ),
@@ -76,12 +74,12 @@ class _UserDetailsScreenState extends ConsumerState<UserDetailsScreen> {
   }
 }
 
-// Método helper para mostrar la información del usuario centrada
+
 Widget _buildUserInfo(String title, String value) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.center, // Centrar horizontalmente
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           title,
@@ -90,7 +88,7 @@ Widget _buildUserInfo(String title, String value) {
             fontSize: 16,
           ),
         ),
-        const SizedBox(width: 8), // Espacio entre el título y el valor
+        const SizedBox(width: 8),
         Text(
           value,
           style: const TextStyle(fontSize: 16),

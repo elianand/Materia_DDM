@@ -254,7 +254,8 @@ class _$MachinesDao extends MachinesDao {
             description: row['description'] as String,
             posterUrl: row['posterUrl'] as String?,
             speed: row['speed'] as int,
-            capacity: row['capacity'] as int));
+            capacity: row['capacity'] as int,
+            active: row['active'] as int));
   }
 
   @override
@@ -293,7 +294,8 @@ class _$MachinesDao extends MachinesDao {
             description: row['description'] as String,
             posterUrl: row['posterUrl'] as String?,
             speed: row['speed'] as int,
-            capacity: row['capacity'] as int),
+            capacity: row['capacity'] as int,
+            active: row['active'] as int),
         arguments: [id]);
   }
 
@@ -340,7 +342,7 @@ class _$MachinesDao extends MachinesDao {
   Future<List<Crusher>> findCrusherMachineByIdComp(int idComp) async {
     return _queryAdapter.queryList(
         'SELECT c.* FROM Crusher c INNER JOIN Machine m ON m.id = c.id WHERE m.idType = 2 AND m.idComp = ?1',
-        mapper: (Map<String, Object?> row) => Crusher(id: row['id'] as int, brand: row['brand'] as String, description: row['description'] as String, posterUrl: row['posterUrl'] as String?, speed: row['speed'] as int, capacity: row['capacity'] as int),
+        mapper: (Map<String, Object?> row) => Crusher(id: row['id'] as int, brand: row['brand'] as String, description: row['description'] as String, posterUrl: row['posterUrl'] as String?, speed: row['speed'] as int, capacity: row['capacity'] as int, active: row['active'] as int),
         arguments: [idComp]);
   }
 
@@ -367,28 +369,6 @@ class _$MachinesDao extends MachinesDao {
   Future<void> deleteCrusherMachine(int id) async {
     await _queryAdapter
         .queryNoReturn('DELETE FROM Crusher WHERE id = ?1', arguments: [id]);
-  }
-
-  @override
-  Future<void> updateInyectMoldMachineById(
-    int id,
-    int temp,
-    int pressure,
-    int produced,
-  ) async {
-    await _queryAdapter.queryNoReturn(
-        'UPDATE InjectionMolding SET temp = ?2, pressure = ?3, produced = ?4 WHERE id = ?1',
-        arguments: [id, temp, pressure, produced]);
-  }
-
-  @override
-  Future<void> updateCrusherMachineById(
-    int id,
-    int active,
-  ) async {
-    await _queryAdapter.queryNoReturn(
-        'UPDATE Crusher SET active = ?2 WHERE id = ?1',
-        arguments: [id, active]);
   }
 
   @override

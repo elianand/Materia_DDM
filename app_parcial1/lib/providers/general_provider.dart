@@ -1,14 +1,15 @@
 import 'dart:developer';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_parcial1/config/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../data/entities/local_machines_repository.dart';
-import '../../data/entities/local_users_repository.dart';
-import '../../domain/models/machine.dart';
-import '../../domain/models/user.dart';
+import '../data/entities/local_machines_repository.dart';
+import '../data/entities/local_users_repository.dart';
+import '../domain/models/machine.dart';
+import '../domain/models/user.dart';
 
 
 // Este es un provider de tipo AppTheme
@@ -32,12 +33,9 @@ final userDataProvider = StateNotifierProvider<UserProvider, User>((ref) => User
 class UserProvider extends StateNotifier<User> {
   UserProvider(super.user);
 
-  //final List<User> users = usersList;
+  List<User>? userList;
   bool autoLoginOk = false;
 
-  void ingresoDeUsuario(User newUser) {
-    state = newUser;
-  }
 
   int getUserId() {
     return state.idUser!;
@@ -51,19 +49,36 @@ class UserProvider extends StateNotifier<User> {
     return autoLoginOk;
   }
 
-  Future<List<User>?> getUsersList() {
+
+  bool attempLogin(String username, String pass, bool saveCredentials) {
+
+    User? user = userList!.firstWhereOrNull((elem) => elem.name == username && elem.password == pass);
+
+    if(user != null) {
+      state = user;
+
+      return true;
+    }else {
+      return false;
+    }
+  }
+
+  Future saveCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.setBool('autoLogin', true);
+    await prefs.setString('username', state.name);
+    await prefs.setString('pass', state.password);
+  }
+
+  Future getUsersListReady() {
     return Future.delayed(
       const Duration(seconds: 1), () async {
         try {
-
-          final users = await LocalUsersRepository().getUsers();
-          _chequeoAutoLoginUsuario(users);
-
-
-          return users;
-
+          userList = await LocalUsersRepository().getUsers();
+          _chequeoAutoLoginUsuario(userList!);
         } catch (e) {
-          return null;
+          debugPrint("Error $e");
         }
       },
     );
@@ -71,30 +86,22 @@ class UserProvider extends StateNotifier<User> {
 
   void _chequeoAutoLoginUsuario(List<User> usersList) async {
 
-    //ref.read(userDataProvider.notifier).ingresoDeUsuario(user);
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     
-    bool login = prefs.getBool("login") ?? false;
+    bool login = prefs.getBool("autoLogin") ?? false;
+
     if(login) {
 
-      String? email = prefs.getString('email');
+      String? username = prefs.getString('username');
       String? pass = prefs.getString('pass');
 
-      User? user = usersList.firstWhereOrNull((elem) => elem.email == email);
+      User? user = usersList.firstWhereOrNull((elem) => elem.name == username && elem.password == pass);
 
-      if(user?.password == pass){
-
-        //prefs.setBool('login', true);
-        prefs.setString('email', user!.email);
-        prefs.setString('pass', user.password);
-
-        ingresoDeUsuario(user);
-
+      if(user != null){
         autoLoginOk = true;
-
+        state = user;
       }else {
-        await prefs.setBool('login', false);
+        await prefs.setBool('autoLogin', false);
         autoLoginOk = false;
       }
     }else {
@@ -107,7 +114,7 @@ class UserProvider extends StateNotifier<User> {
     return Future.delayed(
       const Duration(seconds: 2), () async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool('login', false);
+        prefs.setBool('autoLogin', false);
         autoLoginOk = false;
       },
     );
@@ -171,8 +178,17 @@ class MachinesState {
   }
 
   List<int> getListTypeOfMachines() {
+
+    // Vamos a devolver una lista de la cantidad de maquinas
+    // por tipo
+
+    // Aca vamos a inicializar la lista
     List<int> listMachineTypes = List<int>.filled(2, 0);    // Dos elementos
-    machines!.forEach((elem) => listMachineTypes[elem.idType-1]++);
+    
+    // Vamos a empezar a contar
+    for(var elem in machines!) {
+      listMachineTypes[elem.idType-1]++;
+    } 
     return listMachineTypes;
   }
 
@@ -314,14 +330,6 @@ class MachineProvider extends StateNotifier<MachinesState> {
     }
   }
 
-  Future<void> updateInyectMoldMachineDetail(int temp, int pressure, int produced) async {
-    await LocalMachinesRepository().updateInyectMoldMachineById(state.machineDetailId!, temp, pressure, produced);
-  }
-
-  Future<void> updateCrusherMachineDetail(int active) async {
-    await LocalMachinesRepository().updateCrusherMachineById(state.machineDetailId!, active);
-  }
-
   void cleanMachineDetail() {
     state.machineDetail = null;
   }
@@ -380,7 +388,7 @@ class MachineProvider extends StateNotifier<MachinesState> {
 
     int idComp = ref.read(userDataProvider).idComp;
     Machine newMachine = Machine(id: newId, idType: idType, brand: brand, idComp: idComp, description: description, posterUrl: imagePath);
-    Crusher newCrusher = Crusher(id: newId, brand: brand, description: description, capacity: capacity, speed: speed, posterUrl: imagePath);
+    Crusher newCrusher = Crusher(id: newId, brand: brand, description: description, capacity: capacity, speed: speed, posterUrl: imagePath, active: 0);
 
     try {
 
@@ -443,52 +451,4 @@ class MachineProvider extends StateNotifier<MachinesState> {
     return state.machineDetailType;
   }
 }
-
-
-/// Provider de las maquinas de inyeccion
-
-final injMoldDataProvider = StateNotifierProvider<InjMoldProvider, List<InjectionMolding>>((ref) => InjMoldProvider());
-
-class InjMoldProvider extends StateNotifier<List<InjectionMolding>> {
-  InjMoldProvider() : super([]);
-
-  
-  Future<List<InjectionMolding>> getInjMoldMachines() {
-    return LocalMachinesRepository().getInjMoldMachines();
-  }
-
-  Future<InjectionMolding?> getInyectMoldMachineById(int id) {
-    return LocalMachinesRepository().getInyectMoldMachineById(id);
-  }
-
-  Future<List<InjectionMolding>> getInyectMoldMachineByIdComp(int idComp) {
-    return LocalMachinesRepository().getInyectMoldMachineByIdComp(idComp);
-  }
-}
-
-
-// Provider de las maquinas crusher
-
-final crusherDataProvider = StateNotifierProvider<CrusherProvider, List<Crusher>>((ref) => CrusherProvider());
-
-class CrusherProvider extends StateNotifier<List<Crusher>> {
-  CrusherProvider() : super([]);
-
-  
-  Future<List<Crusher>> getCrusherMachines() {
-    return LocalMachinesRepository().getCrusherMachines();
-  }
-
-  Future<Crusher?> getCrusherMachineById(int id) {
-    return LocalMachinesRepository().getCrusherMachineById(id);
-  }
-
-  Future<List<Crusher>> getCrusherMachineByIdComp(int idComp) {
-    return LocalMachinesRepository().getCrusherMachineByIdComp(idComp);
-  }
-  
-}
-
-
-
 

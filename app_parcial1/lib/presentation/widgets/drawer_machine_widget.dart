@@ -26,41 +26,59 @@ class _DraweMenuState extends State<DrawerMenu> {
         widget.scafoldKey.currentState?.closeDrawer();
       },
       children: [
+        
+        // Label main
         Padding(
           padding: const EdgeInsets.fromLTRB(28, 10, 28, 5),
           child: Text('Main', style: Theme.of(context).textTheme.titleMedium),
         ),
-        NavigationDrawerDestination(    // Configuracion de dispositivos
-              icon: Icon(menuItems[0].icon),
-              label: Text(menuItems[0].title),
+
+        // Remote device configurations
+        NavigationDrawerDestination( 
+          icon: Icon(menuItems[0].icon),
+          label: Text(menuItems[0].title),
         ),
+
+        // Divider
         const Padding(
           padding: EdgeInsets.fromLTRB(28, 10, 28, 5),
           child: Divider(),
         ),
+
+        // App label
         Padding(
           padding: const EdgeInsets.fromLTRB(28, 10, 28, 5),
           child: Text('App',
               style: Theme.of(context).textTheme.titleMedium),
         ),
-        NavigationDrawerDestination(    // Datos de usuario
-              icon: Icon(menuItems[1].icon),
-              label: Text(menuItems[1].title),
+
+        // Configuration de aplicacion
+        NavigationDrawerDestination(    
+          icon: Icon(menuItems[1].icon),
+          label: Text(menuItems[1].title),
         ),
+
+        // Divider
         const Padding(
           padding: EdgeInsets.fromLTRB(28, 10, 28, 5),
           child: Divider(),
         ),
+
+        // Label de opciones de usuario
         Padding(
           padding: const EdgeInsets.fromLTRB(28, 10, 28, 5),
           child: Text('User options',
               style: Theme.of(context).textTheme.titleMedium),
         ),
-        NavigationDrawerDestination(    // Datos de usuario
+
+        // Datos de usuario
+        NavigationDrawerDestination(
               icon: Icon(menuItems[2].icon),
               label: Text(menuItems[2].title),
         ),
-        NavigationDrawerDestination(    // Cerrar sesion
+
+        // Cerrar sesion
+        NavigationDrawerDestination(
               icon: Icon(menuItems[3].icon),
               label: Text(menuItems[3].title),
         ),

@@ -5,7 +5,7 @@ import '../../domain/models/user.dart';
 import '../../main.dart';
 
 class LocalUsersRepository implements UsersRepository {
-  // TODO - inject this DAO
+
   final UsersDao _usersDao = database.usersDao;
 
   @override

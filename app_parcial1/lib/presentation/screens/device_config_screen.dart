@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DeviceConfigScreen extends ConsumerStatefulWidget {
-  const DeviceConfigScreen({Key? key}) : super(key: key);
+  const DeviceConfigScreen({super.key});
  
-
   @override
-  _DeviceConfigScreenState createState() => _DeviceConfigScreenState();
+  DeviceConfigScreenState createState() => DeviceConfigScreenState();
 }
 
-class _DeviceConfigScreenState extends ConsumerState<DeviceConfigScreen> {
+class DeviceConfigScreenState extends ConsumerState<DeviceConfigScreen> {
 
 
   @override

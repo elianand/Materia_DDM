@@ -1,10 +1,7 @@
 import 'dart:async';
-
 import 'dart:math';
-
-
 import 'package:app_parcial1/domain/models/machine.dart';
-
+import 'package:flutter/material.dart';
 import '../../data/entities/local_machines_repository.dart';
 
 class DataGenerator {
@@ -23,7 +20,7 @@ class DataGenerator {
     timer = Timer.periodic(intervalo, (Timer timer) {
       _timerPeriodico();
 
-      print("Generacion de valores");
+      debugPrint("Generacion de valores");
 
     });
   }
@@ -51,24 +48,35 @@ class DataGenerator {
         val = produced;
 
         InjectionMolding? machine = await LocalMachinesRepository().getInyectMoldMachineById(id);
-        InjectionMolding? newMachine = InjectionMolding(id: machine!.id, brand: machine.brand, description: machine.description, pressure: pressure, produced: produced, temp: temp, posterUrl: machine.posterUrl);
-        //await LocalMachinesRepository().updateInyectMoldMachineById(id, temp, pressure, produced);
-        await LocalMachinesRepository().updateInyectMoldMachine(newMachine);
-        InjectionMolding? updateMachine = await LocalMachinesRepository().getInyectMoldMachineById(id);
-        print(updateMachine!.pressure.toString());
 
-        //updateInyectMoldMachine
-        //updateCrusherMachine
+        try {
+          InjectionMolding? newMachine = InjectionMolding(id: machine!.id, brand: machine.brand, description: machine.description, pressure: pressure, produced: produced, temp: temp, posterUrl: machine.posterUrl);
+          await LocalMachinesRepository().updateInyectMoldMachine(newMachine);
+          InjectionMolding? updateMachine = await LocalMachinesRepository().getInyectMoldMachineById(id);
+          debugPrint(updateMachine!.pressure.toString());
+        } catch(e) {
+          stop();
+          debugPrint("Deteniendo el generador $e");
+        }
 
       case 2:
-        active = Random().nextInt(1);
+        active = Random().nextInt(2);
 
-        await LocalMachinesRepository().updateCrusherMachineById(id, active);
         Crusher? machine = await LocalMachinesRepository().getCrusherMachineById(id);
-        print(machine!.active.toString());
+        
+        try {
+
+          Crusher? newMachine = Crusher(id: machine!.id, brand: machine.brand, description: machine.description, capacity: machine.capacity, speed: machine.speed, active: active, posterUrl: machine.posterUrl);
+          await LocalMachinesRepository().updateCrusherMachine(newMachine);
+          Crusher? updateMachine = await LocalMachinesRepository().getCrusherMachineById(id);
+          debugPrint(updateMachine!.active.toString());
+
+        } catch(e) {
+          stop();
+          debugPrint("Deteniendo el generador $e");
+        }
       default: 
         return;
     }
-    
   }
 }

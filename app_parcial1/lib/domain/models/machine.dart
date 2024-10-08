@@ -13,7 +13,7 @@ class Machine {
   final int idComp;
   String? brand;
   String? description;
-  String? posterUrl;  // Aca va la imagen, es inpresindible
+  String? posterUrl;
 
 
   Machine({
@@ -28,13 +28,6 @@ class Machine {
   factory Machine.fromJson(Map<String, dynamic> json) {
     return Machine(
       id: json['id'],
-      //idType: json['idType'] as MachinesEnum,
-      //idType: MachinesEnum.values.firstWhere((e) => e.toString() == "MachinesEnum.$json['idType']", orElse: () => MachinesEnum.injectionMolding),
-      /*idType: switch (json['idType']) {
-          "injectionMolding" => MachinesEnum.injectionMolding,
-          "crusher" => MachinesEnum.crusher,
-          _ => MachinesEnum.injectionMolding
-      },*/
       idType: json['idType'],
       idComp: json['idComp'],
     );
@@ -74,15 +67,7 @@ class InjectionMolding{
       temp: json['temp'],
       pressure: json['pressure'],
       posterUrl: json['posterUrl'],
-      produced: 0,
-      //idType: json['idType'] as MachinesEnum,
-      //idType: MachinesEnum.values.firstWhere((e) => e.toString() == "MachinesEnum.$json['idType']", orElse: () => MachinesEnum.injectionMolding),
-      /*idType: switch (json['idType']) {
-          "injectionMolding" => MachinesEnum.injectionMolding,
-          "crusher" => MachinesEnum.crusher,
-          _ => MachinesEnum.injectionMolding
-      },*/
-      
+      produced: 0,      
     );
   }
 }
@@ -99,7 +84,7 @@ class Crusher{
   final String? posterUrl;
   final int speed;
   final int capacity;
-  int active = 0;
+  final int active;
   
   Crusher({
     required this.id,
@@ -107,16 +92,14 @@ class Crusher{
     required this.description,
     this.posterUrl,
     required this.speed,
-    required this.capacity, 
+    required this.capacity,
+    required this.active, 
   });
 
-  setActive(bool active){
-    this.active = active ? 1 : 0;
+  bool isActive() {
+    return active == 1 ? true : false;
   }
 
-  bool isActive() {
-    return (active == 1) ? true : false;
-  }
 
   factory Crusher.fromJson(Map<String, dynamic> json) {
     return Crusher(
@@ -126,14 +109,7 @@ class Crusher{
       speed: json['speed'],
       capacity: json['capacity'],
       posterUrl: json['posterUrl'],
-      //idType: json['idType'] as MachinesEnum,
-      //idType: MachinesEnum.values.firstWhere((e) => e.toString() == "MachinesEnum.$json['idType']", orElse: () => MachinesEnum.injectionMolding),
-      /*idType: switch (json['idType']) {
-          "injectionMolding" => MachinesEnum.injectionMolding,
-          "crusher" => MachinesEnum.crusher,
-          _ => MachinesEnum.injectionMolding
-      },*/
-      
+      active: 0,
     );
   }
 }

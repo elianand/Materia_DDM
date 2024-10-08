@@ -6,7 +6,7 @@ import '../../domain/models/machine.dart';
 @dao
 abstract class MachinesDao {
   
-  
+  // Requests para devolver todas las maquinas de la base
   @Query('SELECT * FROM Machine')
   Future<List<Machine>> findAllMachines();
 
@@ -19,7 +19,7 @@ abstract class MachinesDao {
 
 
 
-
+  // Requests para devolver todas las maquinas de la base con un ID
   @Query('SELECT * FROM Machine WHERE id = :id')
   Future<Machine?> findMachineById(int id);
 
@@ -32,11 +32,10 @@ abstract class MachinesDao {
 
 
 
-
-
-
+  // Requests para devolver todas las maquinas de la base con un idComp
   @Query('SELECT * FROM Machine WHERE idComp = :idComp')
   Future<List<Machine>?> findMachinesByIdComp(int idComp);
+
 
   @Query('SELECT * FROM Machine WHERE idComp = :idComp and idType = :idType')
   Future<List<Machine>> findMachineByIdCompAndIdType(int idComp, int idType);
@@ -59,8 +58,6 @@ abstract class MachinesDao {
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertMachine(Machine machine);
 
-  //@Insert(onConflict: OnConflictStrategy.ignore)
-  //Future<void> insertMovieGenres(List<MovieToGenre> movieGenres);
 
   @Query('DELETE FROM Machine WHERE id = :id')
   Future<void> deleteMachine(int id);
@@ -76,9 +73,6 @@ abstract class MachinesDao {
   @update
   Future<void> updateMachine(Machine machine);
 
-  //@Query('SELECT * FROM Genre')
-  //Future<List<Genre>> getGenres();
-
 
   @insert
   Future<void> insertInjMoldMachine(InjectionMolding machine);
@@ -87,14 +81,6 @@ abstract class MachinesDao {
   Future<void> insertCrusherMachine(Crusher machine);
 
 
-
-  @Query('UPDATE InjectionMolding SET temp = :temp, pressure = :pressure, produced = :produced WHERE id = :id')
-  Future<void> updateInyectMoldMachineById(int id, int temp, int pressure, int produced);
-
-  @Query('UPDATE Crusher SET active = :active WHERE id = :id')
-  Future<void> updateCrusherMachineById(int id, int active);
-
-  
 
   @update
   Future<void> updateInyectMoldMachine(InjectionMolding machine);

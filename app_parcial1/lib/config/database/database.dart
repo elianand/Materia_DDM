@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:floor/floor.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
-
-
-
 import '../../data/entities/json_machines_repository.dart';
 import '../../data/entities/json_users_repository.dart';
 import '../../data/entities/machines_dao.dart';
@@ -62,7 +60,7 @@ abstract class AppDatabase extends FloorDatabase {
         },
       ).insert(machine, OnConflictStrategy.replace);
       }catch(e) {
-        print('Error ${e}');
+        debugPrint('Error $e');
       }
     }
 
@@ -82,7 +80,7 @@ abstract class AppDatabase extends FloorDatabase {
         },
       ).insert(machine, OnConflictStrategy.replace);
       }catch(e) {
-        print('Error ${e}');
+        debugPrint('Error $e');
       }
     }
 
@@ -102,7 +100,7 @@ abstract class AppDatabase extends FloorDatabase {
         },
       ).insert(machine, OnConflictStrategy.replace);
       }catch(e) {
-        print('Error ${e}');
+        debugPrint('Error $e');
       }
     }
 
@@ -121,7 +119,7 @@ abstract class AppDatabase extends FloorDatabase {
         },
       ).insert(user, OnConflictStrategy.replace);
       }catch(e) {
-        print('Error ${e}');
+        debugPrint('Error $e');
       }
     }
   }

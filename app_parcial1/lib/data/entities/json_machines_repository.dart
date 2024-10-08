@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 
@@ -125,7 +124,6 @@ class JsonMachinesRepository implements MachinesRepository {
         final jsonString = await rootBundle.loadString('assets/json/crusher_machines.json');
         final jsonList = json.decode(jsonString) as List;
         final crusherMachines = jsonList.map((json) => Crusher.fromJson(json)).toList();
-        //final machinesComp = machines.where((elem) => (elem.idComp == idComp && elem.idType == 2)).toList();
         // OJOOO, puse que estoy seguro que no va a ser null
         final crusherSelect = crusherMachines.where((crusher) {
           return machines!.any((machine) => machine.id == crusher.id);
@@ -148,34 +146,6 @@ class JsonMachinesRepository implements MachinesRepository {
     );
   }
 
-
-/*
-  @override
-  Future<MovieDetailed> getMovieById(int id) async {
-    final genres = await getGenres();
-    final movies = await getMovies();
-
-    final movie = movies.firstWhere((m) => m.id == id);
-    final movieDetailed = MovieDetailed(
-      id: movie.id,
-      title: movie.title,
-      overview: movie.overview,
-      releaseDate: movie.releaseDate,
-      genres: genres
-          .where((g) => movie.genreIds.contains(g.id))
-          .map((e) => e.name)
-          .join(','),
-      posterUrl: movie.posterUrl,
-      backdropUrl: movie.backdropUrl,
-      likes: movie.likes,
-    );
-
-    return Future.delayed(
-      const Duration(seconds: 2),
-      () => movieDetailed,
-    );
-  }
-*/
 
 
   @override
@@ -237,22 +207,6 @@ class JsonMachinesRepository implements MachinesRepository {
   }
 
   @override
-  Future<void> updateInyectMoldMachineById(int id, int temp, int pressure, int produced) {
-    return Future.delayed(
-      const Duration(seconds: 1),
-      () => null,
-    );
-  }
-
-  @override
-  Future<void> updateCrusherMachineById(int id, int active) {
-    return Future.delayed(
-      const Duration(seconds: 1),
-      () => null,
-    );
-  }
-
-  @override
   Future<void> updateInyectMoldMachine(InjectionMolding machine) {
     return Future.delayed(
       const Duration(seconds: 1),
@@ -268,7 +222,5 @@ class JsonMachinesRepository implements MachinesRepository {
     );
   }
   
-
-
 
 }

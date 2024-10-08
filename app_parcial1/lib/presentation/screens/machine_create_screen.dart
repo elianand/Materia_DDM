@@ -1,45 +1,37 @@
-
-
-
-
-
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
-
-import '../../theme/providers/general_provider.dart';
+import '../../providers/general_provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io'; // Necesario para manejar archivos de imagen
-//import 'package:path_provider/path_provider.dart'; // Para obtener el directorio local
-import 'package:path/path.dart'; // Para manejar rutas de archivos
+// Necesario para manejar archivos de imagen
+import 'dart:io'; 
+// Para manejar rutas de archivos
+import 'package:path/path.dart'; 
 
 
 class CreateMachineScreen extends ConsumerStatefulWidget {
   const CreateMachineScreen({super.key});
 
   @override
-  _CreateMachineScreenState createState() => _CreateMachineScreenState();
+  CreateMachineScreenState createState() => CreateMachineScreenState();
 }
 
-class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
+class CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  String? _machineType; // Puede ser "Injection Molding" o "Crusher"
+  String? _machineType;
   String? _brand;
   String? _description;
   String? _imagePath;
-  File? _imageFile; // Imagen seleccionada
+  File? _imageFile;
   
   // Características específicas
   int? _temp;
   int? _pressure;
   int? _speed;
   int? _capacity;
-
-
   final ImagePicker _picker = ImagePicker();
 
 
@@ -51,12 +43,12 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
       
       _imageFile = File(pickedFile.path);
       String? imagePath = await _saveImageToLocalDirectory(_imageFile!);
+      // Aca vamos a esperar a que se guarda la imagen en el directorio local
       
       setState(() {
         _imagePath = imagePath;
       });
 
-      // Aca vamos a esperar a que se guarda la imagen en el directorio local
     }
   }
 
@@ -65,9 +57,7 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
 
       // Aca vamos a obtener el directorio local donde se guardaran los archivos
       final directory = await getApplicationDocumentsDirectory();
-
       final imageName = basename(imageFile.path);
-
       final imageFolderPath = '${directory.path}/assets/images';
       final imagePath = '$imageFolderPath/$imageName';
 
@@ -77,13 +67,10 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
         await imageDirectory.create(recursive: true);
       }
 
-      //_imagePath = imagePath;
-
       // Copiamos la imagen seleccionada al directorio local
       await imageFile.copy(imagePath);
 
       log('Imagen guardada en: $imagePath');
-
 
       // Esta es la ruta absoluta
       return imagePath;
@@ -114,7 +101,10 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+
                 const SizedBox(height: 20),
+
+
                 // Tipo de máquina
                 const Text('Select the machine type:'),
                 DropdownButtonFormField<String>(
@@ -135,7 +125,9 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
                       value == null ? 'Please, select the type' : null,
                 ),
                 
+
                 const SizedBox(height: 10),
+
 
                 // Características según el tipo de máquina
                 if (_machineType == 'Injection Molding') ...[
@@ -154,6 +146,7 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
                       return null; 
                     }
                   ),
+
                   const SizedBox(height: 10),
                   TextFormField(
                     decoration: const InputDecoration(labelText: 'Pressure [bar]'),
@@ -185,6 +178,7 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
                       return null; 
                     }
                   ),
+
                   const SizedBox(height: 10),
                   TextFormField(
                     decoration: const InputDecoration(labelText: 'Capacity [kg]'),
@@ -214,6 +208,7 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
                       value == null || value.isEmpty ? 'Enter brand' : null,
                 ),
                 
+
                 const SizedBox(height: 30),
 
                 // Descripción
@@ -235,6 +230,8 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
                 ),
                 
                 const SizedBox(width: 16),
+
+                // label de imagen pickeada
                 if (_imageFile != null)
                   const Text(
                     'Image Selected',
@@ -252,14 +249,9 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
                 // Vista previa de la imagen seleccionada
                 if (_imageFile != null) 
                   Center(
-                    
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: /*Image.file(
-                        _imageFile!,
-                        height: 150,
-                      ),*/
-                      Image.file(
+                      child: Image.file(
                         File(_imagePath ?? ""), 
                         height: 200,
                         
@@ -269,15 +261,12 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
                           return Image.asset(
                             "assets/images/Type_NotFound.webp",
                             height: 200,
-                            //color: Colors.red,
                           );
                         },
                       )
                     ),
                   ),
-
-
-
+                
 
                 const SizedBox(height: 30),
 
@@ -300,9 +289,9 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text('Save new machine'),
-                                SizedBox(width: 10),  // Añade espacio entre el texto y el indicador
+                                SizedBox(width: 10),
                                 SizedBox(
-                                  height: 20,  // Ajusta el tamaño del CircularProgressIndicator
+                                  height: 20,
                                   width: 20,
                                   child: CircularProgressIndicator(strokeWidth: 2),
                                 ),
@@ -318,7 +307,6 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
                   
                               int idType = 0;
                               
-                              
                               if (_machineType == 'Injection Molding') {
                                 idType = 1;
                                 ref.read(machinesDataProvider.notifier).insertInjMoldMachine(idType, _brand!, _description!, _temp!, _pressure!, _imagePath);
@@ -326,8 +314,6 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
                                 idType = 2;
                                 ref.read(machinesDataProvider.notifier).insertCrusherMachine(idType, _brand!, _description!, _capacity!, _speed!, _imagePath);
                               }
-                  
-                              
                             }
                           },
                           child: const Text('Save new machine'),
@@ -350,5 +336,4 @@ class _CreateMachineScreenState extends ConsumerState<CreateMachineScreen> {
       ),
     );
   }
-
 }

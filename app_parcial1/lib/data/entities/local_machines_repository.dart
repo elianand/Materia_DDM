@@ -4,7 +4,7 @@ import '../../main.dart';
 import 'machines_dao.dart';
 
 class LocalMachinesRepository implements MachinesRepository {
-  // TODO - inject this DAO
+  
   final MachinesDao _machinesDao = database.machinesDao;
 
   @override
@@ -147,23 +147,6 @@ class LocalMachinesRepository implements MachinesRepository {
       },
     );
   }
-
-  @override
-  Future<void> updateInyectMoldMachineById(int id, int temp, int pressure, int produced) async {
-    try{
-      return _machinesDao.updateInyectMoldMachineById(id, temp, pressure, produced);
-
-    }catch(e) {
-      print("Error al actualizar: $e");
-    }
-  }
-
-
-  @override
-  Future<void> updateCrusherMachineById(int id, int active) async {
-    return _machinesDao.updateCrusherMachineById(id, active);
-  }
-
 
 
 
