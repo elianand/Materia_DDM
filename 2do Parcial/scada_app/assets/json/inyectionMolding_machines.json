@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "brand": "Mitsubishi",
+        "description": "Red, 500 Ton",
+        "temp": 200, 
+        "pressure": 150,
+        "posterUrl": "assets/images/InjMoldMachine.webp"
+    },
+    {
+        "id": 3,
+        "brand": "Techmation",
+        "description": "Green, 1500 Ton",
+        "temp": 210, 
+        "pressure": 200,
+        "posterUrl": "assets/images/InjMoldMachine.webp"
+    },
+    {
+        "id": 4,
+        "brand": "Rocem",
+        "description": "Yellow, 600 Ton",
+        "temp": 210, 
+        "pressure": 160,
+        "posterUrl": "assets/images/InjMoldMachine.webp"
+    },
+    {
+        "id": 5,
+        "brand": "Techmation",
+        "description": "Black, 700 Ton",
+        "temp": 220, 
+        "pressure": 220,
+        "posterUrl": "assets/images/InjMoldMachine.webp"
+    },
+    {
+        "id": 7,
+        "brand": "Techmation",
+        "description": "Blue, 600 Ton",
+        "temp": 160, 
+        "pressure": 150,
+        "posterUrl": "assets/images/InjMoldMachine.webp"
+    }
+]

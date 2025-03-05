@@ -1,0 +1,30 @@
+[
+    {
+        "idComp": 1,
+        "name": "Elian",
+        "email": "elian@gmail.com",
+        "password": "pass",
+        "age": 20
+    },
+    {
+        "idComp": 1,
+        "name": "Julian",
+        "email": "julian@gmail.com",
+        "password": "pass",
+        "age": 30
+    },
+    {
+        "idComp": 2,
+        "name": "Martin",
+        "email": "martin@gmail.com",
+        "password": "pass",
+        "age": 40
+    },
+    {
+        "idComp": 2,
+        "name": "Lucas",
+        "email": "lucas@gmail.com",
+        "password": "pass",
+        "age": 50
+    }
+]

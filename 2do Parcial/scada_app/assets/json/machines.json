@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "idType": "injectionMolding",
+        "idComp": 1
+    },
+    {
+        "id": 2,
+        "idType": "crusher",
+        "idComp": 1
+    },
+    {
+        "id": 3,
+        "idType": "injectionMolding",
+        "idComp": 1
+    },
+    {
+        "id": 4,
+        "idType": "injectionMolding",
+        "idComp": 1
+    },
+
+
+
+
+    {
+        "id": 5,
+        "idType": "injectionMolding",
+        "idComp": 2
+    },
+    {
+        "id": 6,
+        "idType": "crusher",
+        "idComp": 2
+    },
+    {
+        "id": 7,
+        "idType": "injectionMolding",
+        "idComp": 2
+    },
+    {
+        "id": 8,
+        "idType": "crusher",
+        "idComp": 2
+    }
+
+]

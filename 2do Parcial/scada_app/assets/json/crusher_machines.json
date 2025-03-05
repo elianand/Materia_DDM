@@ -1,0 +1,26 @@
+[
+    {
+        "id": 2,
+        "brand": "Angry Tooth",
+        "description": "Old, 5000 rpm",
+        "speed": 5000, 
+        "capacity": 1000,
+        "posterUrl": "assets/images/InjMoldMachine.webp"
+    },
+    {
+        "id": 6,
+        "brand": "Angry Tooth",
+        "description": "New, 9000 rpm",
+        "speed": 9000, 
+        "capacity": 2000,
+        "posterUrl": "assets/images/InjMoldMachine.webp"
+    },
+    {
+        "id": 8,
+        "brand": "Honda",
+        "description": "Ultra fine, 15000 rpm",
+        "speed": 15000, 
+        "capacity": 500,
+        "posterUrl": "assets/images/InjMoldMachine.webp"
+    }
+]

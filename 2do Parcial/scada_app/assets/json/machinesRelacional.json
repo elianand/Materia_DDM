@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "idType": 1,
+        "idComp": 1
+    },
+    {
+        "id": 2,
+        "idType": 2,
+        "idComp": 1
+    },
+    {
+        "id": 3,
+        "idType": 1,
+        "idComp": 1
+    },
+    {
+        "id": 4,
+        "idType": 1,
+        "idComp": 1
+    },
+
+
+
+
+    {
+        "id": 5,
+        "idType": 1,
+        "idComp": 2
+    },
+    {
+        "id": 6,
+        "idType": 2,
+        "idComp": 2
+    },
+    {
+        "id": 7,
+        "idType": 1,
+        "idComp": 2
+    },
+    {
+        "id": 8,
+        "idType": 2,
+        "idComp": 2
+    }
+
+]

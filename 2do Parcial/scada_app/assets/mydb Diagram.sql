@@ -1,0 +1,43 @@
+CREATE TABLE `User` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`name` TEXT()(65535) NOT NULL,
+	`idcomp` INTEGER() NOT NULL,
+	`username` TEXT(65535) NOT NULL,
+	`password` TEXT(65535) NOT NULL,
+	`email` TEXT(65535) NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `Machine` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`idtype` INTEGER() NOT NULL,
+	`idcomp` INTEGER() NOT NULL,
+	`brand` TEXT(65535) NOT NULL,
+	`desc` TEXT(65535) NOT NULL,
+	`imageUrl` TEXT()(65535),
+	`capacity` INTEGER(),
+	`produced` INTEGER(),
+	`preassure` INTEGER(),
+	`speed` INTEGER(),
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE `Record` (
+	`id` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`idMachine` INTEGER() NOT NULL,
+	`timestap` DATETIME() NOT NULL,
+	`idevent` INTEGER() NOT NULL,
+	`idvalue` INTEGER(),
+	PRIMARY KEY(`id`)
+) COMMENT='(ON 1 | OFF 2 | ACT 3 ) idEvent 1
+CantProduced idEvent 2';
+
+
+ALTER TABLE `User`
+ADD FOREIGN KEY(`idcomp`) REFERENCES `Machine`(`idcomp`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Record`
+ADD FOREIGN KEY(`idMachine`) REFERENCES `Machine`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
